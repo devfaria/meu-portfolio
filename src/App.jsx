@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import LuizPhoto from "./assets/luiz.jpg";
 
 export default function App() {
-  // LÓGICA DO CHAT REAL CONECTADO À AWS
+  // LÓGICA DO CHAT REAL CONECTADA À VERCEL
   const [messages, setMessages] = useState([
     {
       role: "ai",
@@ -26,25 +26,22 @@ export default function App() {
     setIsTyping(true);
 
     try {
-      // 2. Faz a chamada HTTP real para a URL da sua Lambda na AWS
-      const response = await fetch(
-        "https://yzpzd2l3zku23owdtzsllxz4f40deyqi.lambda-url.us-east-1.on.aws/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ message: userText }), // Passa a pergunta no corpo da requisição
+      // 2. Faz a chamada HTTP real para a SUA rota segura na Vercel (/api/chat)
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ message: userText }),
+      });
 
       if (!response.ok) {
-        throw new Error("Erro ao consultar o servidor da AWS.");
+        throw new Error("Erro ao consultar o servidor da Vercel.");
       }
 
       const data = await response.json();
 
-      // 3. Adiciona a resposta real gerada pelo Bedrock na tela
+      // 3. Adiciona a resposta real gerada pela IA na tela
       setMessages((prev) => [...prev, { role: "ai", text: data.reply }]);
     } catch (error) {
       console.error("Erro de conexão:", error);
@@ -236,7 +233,7 @@ export default function App() {
                 Stack & Estudos
               </h4>
               <p className="text-zinc-400 leading-relaxed text-sm relative z-10">
-                Graduando no 4º período de Engenharia de Software pela Uninter,
+                Graduando no 6º período de Engenharia de Software pela Uninter,
                 divido meu tempo entre a prática de código e o inglês. Tenho
                 foco total no desenvolvimento Front-end (React, Vite, Tailwind)
                 e estou iniciando meus estudos no ecossistema Cloud, visando a
@@ -345,11 +342,11 @@ export default function App() {
                   </svg>
                 </div>
                 <h4 className="text-lg font-bold text-white mb-2">
-                  IA + Bedrock
+                  IA Integrada
                 </h4>
                 <p className="text-zinc-500 text-sm">
-                  Integrado com sucesso! Consumindo o Claude 3 Haiku via AWS
-                  Lambda.
+                  Conectado com sucesso! Consumindo API via Serverless na
+                  Vercel.
                 </p>
                 <span className="mt-4 text-xs font-medium px-3 py-1 bg-zinc-950 text-emerald-400 rounded-full border border-zinc-800">
                   Ativo
@@ -360,7 +357,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* SEÇÃO DE CHAT COM IA (Assistente Real) */}
+      {/* SEÇÃO DE CHAT COM IA */}
       <section
         id="chat"
         className="w-full bg-zinc-900/30 border-t border-zinc-800/50 pt-20 pb-24"
@@ -404,7 +401,7 @@ export default function App() {
                   Assistente de Carreira
                 </p>
                 <p className="text-xs text-emerald-400 font-medium">
-                  Conectado ao Amazon Bedrock
+                  Conectado na Vercel
                 </p>
               </div>
             </div>
@@ -417,11 +414,7 @@ export default function App() {
                   className={`flex w-full ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] md:max-w-[75%] p-4 rounded-2xl text-sm leading-relaxed ${
-                      msg.role === "user"
-                        ? "bg-emerald-500 text-zinc-950 rounded-br-none font-medium"
-                        : "bg-zinc-800 text-zinc-300 rounded-bl-none border border-zinc-700/50"
-                    }`}
+                    className={`max-w-[85%] md:max-w-[75%] p-4 rounded-2xl text-sm leading-relaxed ${msg.role === "user" ? "bg-emerald-500 text-zinc-950 rounded-br-none font-medium" : "bg-zinc-800 text-zinc-300 rounded-bl-none border border-zinc-700/50"}`}
                   >
                     {msg.text}
                   </div>
