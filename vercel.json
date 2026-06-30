@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd meu-portfolio && npm run build",
+  "outputDirectory": "meu-portfolio/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/meu-portfolio/dist/$1"
+    }
+  ]
+}
